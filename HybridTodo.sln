@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridTodo", "HybridTodo\HybridTodo\HybridTodo.csproj", "{002315A8-52F9-4EA5-8915-B28BD6C15748}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridTodo.Shared", "HybridTodo\HybridTodo.Shared\HybridTodo.Shared.csproj", "{DBE9FA2A-866E-4CFA-8A6F-B8423866F4D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridTodo.Web", "HybridTodo\HybridTodo.Web\HybridTodo.Web.csproj", "{93DA0301-1EFA-4E4C-B52F-BCF227E294B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridTodo.Web.Client", "HybridTodo\HybridTodo.Web.Client\HybridTodo.Web.Client.csproj", "{A3ED2E39-1D15-4CDE-897F-3C17973C788C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridTodo.Api", "HybridTodo.Api\HybridTodo.Api.csproj", "{2328011D-8D59-480A-A0E6-C600DCFABD77}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{002315A8-52F9-4EA5-8915-B28BD6C15748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{002315A8-52F9-4EA5-8915-B28BD6C15748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{002315A8-52F9-4EA5-8915-B28BD6C15748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{002315A8-52F9-4EA5-8915-B28BD6C15748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBE9FA2A-866E-4CFA-8A6F-B8423866F4D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBE9FA2A-866E-4CFA-8A6F-B8423866F4D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBE9FA2A-866E-4CFA-8A6F-B8423866F4D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBE9FA2A-866E-4CFA-8A6F-B8423866F4D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93DA0301-1EFA-4E4C-B52F-BCF227E294B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93DA0301-1EFA-4E4C-B52F-BCF227E294B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93DA0301-1EFA-4E4C-B52F-BCF227E294B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93DA0301-1EFA-4E4C-B52F-BCF227E294B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3ED2E39-1D15-4CDE-897F-3C17973C788C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3ED2E39-1D15-4CDE-897F-3C17973C788C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3ED2E39-1D15-4CDE-897F-3C17973C788C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3ED2E39-1D15-4CDE-897F-3C17973C788C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2328011D-8D59-480A-A0E6-C600DCFABD77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2328011D-8D59-480A-A0E6-C600DCFABD77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2328011D-8D59-480A-A0E6-C600DCFABD77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2328011D-8D59-480A-A0E6-C600DCFABD77}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
