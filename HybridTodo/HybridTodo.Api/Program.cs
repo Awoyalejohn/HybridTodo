@@ -1,8 +1,16 @@
+using HybridTodo.Api.Endpoints;
+using HybridTodo.Api.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
+
+builder.Services.AddAuthentication().AddBearerToken(JwtBearerDefaults.AuthenticationScheme);
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -10,14 +18,23 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(options =>
+    {
+        options.Servers = [];
+        options.Authentication = new() { PreferredSecurityScheme = JwtBearerDefaults.AuthenticationScheme };
+    });
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthorization();
 
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
+
+app.Map("/", () => Results.Redirect("/scalar/v1"));
 
 app.MapGet("/weatherforecast", () =>
 {
@@ -32,6 +49,9 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
+
+app.MapAuthEndpoints();
+app.MapTestAuthEndpoints();
 
 app.Run();
 
