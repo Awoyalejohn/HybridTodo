@@ -1,7 +1,11 @@
 using HybridTodo.Shared.Services;
+using HybridTodo.Web;
+using HybridTodo.Web.Client;
 using HybridTodo.Web.Components;
 using HybridTodo.Web.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.FluentUI.AspNetCore.Components;
+using HybridTodo.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +17,15 @@ builder.Services.AddFluentUIComponents();
 
 // Add device-specific services used by the HybridTodo.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
+
+builder.Services.AddAuthentication().AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
+
+
+// Configure the HttpClient for the backend API
+builder.Services.AddHttpClient<AuthClient>(client =>
+{
+    client.BaseAddress = new("https://localhost:7175");
+});
 
 var app = builder.Build();
 
@@ -40,5 +53,8 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(
         typeof(HybridTodo.Shared._Imports).Assembly,
         typeof(HybridTodo.Web.Client._Imports).Assembly);
+
+
+app.MapAuthEndpoints();
 
 app.Run();

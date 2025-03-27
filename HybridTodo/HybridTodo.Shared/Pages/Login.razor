@@ -1,0 +1,58 @@
+@page "/login"
+@inject AuthClient AuthClient
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+
+<PageTitle>Login</PageTitle>
+
+<h1>Login</h1>
+
+
+<FluentButton Appearance="Appearance.Accent" @onclick="LoginAsync">Login</FluentButton>
+
+@code {
+    private async Task LoginAsync()
+    {
+        await Task.CompletedTask;
+
+        // await AuthClient.LoginAsync("test@test.com", "Test");
+
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:7175/api/auth/login")
+                {
+                    Content = JsonContent.Create(new { Email = "test@test.com", Password = "pass123" })
+                };
+
+            request.Headers.Add("Accept", "application/json");
+
+            var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+
+
+            if (response.Headers.Contains("Set-Cookie"))
+            {
+                var setCookieHeader = response.Headers.GetValues("Set-Cookie").FirstOrDefault();
+                if (!string.IsNullOrEmpty(setCookieHeader))
+                {
+                    var cookie = setCookieHeader.Split(";")[0];
+                    // await JSRuntime.InvokeVoidAsync("eval", $"document.cookie = '{cookie}';");
+                }
+            }
+
+
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Ensure the browser applies the Set-Cookie response
+                // NavigationManager.NavigateTo("/", forceLoad: true);
+                NavigationManager.NavigateTo("/login-success", forceLoad: true);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            throw;
+        }
+
+    }
+}
