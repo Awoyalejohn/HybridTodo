@@ -1,11 +1,10 @@
+using HybridTodo.Shared;
 using HybridTodo.Shared.Services;
 using HybridTodo.Web;
-using HybridTodo.Web.Client;
 using HybridTodo.Web.Components;
 using HybridTodo.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.FluentUI.AspNetCore.Components;
-using HybridTodo.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +17,9 @@ builder.Services.AddFluentUIComponents();
 // Add device-specific services used by the HybridTodo.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
-builder.Services.AddAuthentication().AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
 
 
 // Configure the HttpClient for the backend API

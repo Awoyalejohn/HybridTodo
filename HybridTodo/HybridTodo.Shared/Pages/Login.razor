@@ -2,6 +2,7 @@
 @inject AuthClient AuthClient
 @inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Login</PageTitle>
 
@@ -10,49 +11,21 @@
 
 <FluentButton Appearance="Appearance.Accent" @onclick="LoginAsync">Login</FluentButton>
 
+<FluentButton Appearance="Appearance.Stealth" @onclick="LogoutAsync">Logout</FluentButton>
+
 @code {
     private async Task LoginAsync()
     {
-        await Task.CompletedTask;
+        var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
+        bool result = await authModule.InvokeAsync<bool>("loginAsync", "test@test.com", "MyPassword");
 
-        // await AuthClient.LoginAsync("test@test.com", "Test");
+        Console.WriteLine(result);
 
-        try
-        {
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:7175/api/auth/login")
-                {
-                    Content = JsonContent.Create(new { Email = "test@test.com", Password = "pass123" })
-                };
+    }
 
-            request.Headers.Add("Accept", "application/json");
-
-            var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-
-
-            if (response.Headers.Contains("Set-Cookie"))
-            {
-                var setCookieHeader = response.Headers.GetValues("Set-Cookie").FirstOrDefault();
-                if (!string.IsNullOrEmpty(setCookieHeader))
-                {
-                    var cookie = setCookieHeader.Split(";")[0];
-                    // await JSRuntime.InvokeVoidAsync("eval", $"document.cookie = '{cookie}';");
-                }
-            }
-
-
-
-            if (response.IsSuccessStatusCode)
-            {
-                // Ensure the browser applies the Set-Cookie response
-                // NavigationManager.NavigateTo("/", forceLoad: true);
-                NavigationManager.NavigateTo("/login-success", forceLoad: true);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            throw;
-        }
-
+    private async Task LogoutAsync()
+    {
+        var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
+        await authModule.InvokeVoidAsync("logoutAsync");
     }
 }
