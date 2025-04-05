@@ -1,6 +1,7 @@
-using HybridTodo.Shared;
+using HybridTodo.Shared.Clients;
 using HybridTodo.Shared.Services;
 using HybridTodo.Web;
+using HybridTodo.Web.Client.Clients;
 using HybridTodo.Web.Components;
 using HybridTodo.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -11,11 +12,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
-    .AddInteractiveWebAssemblyComponents();
+    .AddInteractiveWebAssemblyComponents()
+    .AddAuthenticationStateSerialization();
 builder.Services.AddFluentUIComponents();
+
+builder.Services.AddCascadingAuthenticationState();
 
 // Add device-specific services used by the HybridTodo.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
+builder.Services.AddScoped<IAuthClient, AuthClient>();
 
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -23,10 +28,10 @@ builder.Services
 
 
 // Configure the HttpClient for the backend API
-builder.Services.AddHttpClient<AuthClient>(client =>
-{
-    client.BaseAddress = new("https://localhost:7175");
-});
+//builder.Services.AddHttpClient<AuthClient>(client =>
+//{
+//    client.BaseAddress = new("https://localhost:7175");
+//});
 
 var app = builder.Build();
 

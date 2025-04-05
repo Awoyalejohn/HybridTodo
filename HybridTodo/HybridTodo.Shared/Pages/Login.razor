@@ -1,31 +1,76 @@
-@page "/login"
-@inject AuthClient AuthClient
-@inject HttpClient HttpClient
+@page "/Account/Login"
+@using System.ComponentModel.DataAnnotations
+@using HybridTodo.Shared.Clients
+@inject IAuthClient AuthClient
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JSRuntime
+
 
 <PageTitle>Login</PageTitle>
 
 <h1>Login</h1>
-
-
-<FluentButton Appearance="Appearance.Accent" @onclick="LoginAsync">Login</FluentButton>
-
-<FluentButton Appearance="Appearance.Stealth" @onclick="LogoutAsync">Logout</FluentButton>
+<FluentGrid>
+    <FluentGridItem xs="8" sm="4">
+        <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+            <DataAnnotationsValidator />
+            <h2>Use a local account to log in.</h2>
+            <hr />
+            <FluentValidationSummary class="text-danger" role="alert" />
+            <FluentStack Orientation="Orientation.Vertical">
+                <FluentTextField Name="Input.Email" @bind-Value="Input.Email" AutoComplete="username" Required="true" Placeholder="name@example.com" Label="Email" Style="width: 100%" />
+                <FluentValidationMessage For="() => Input.Email" class="text-danger" />
+                <FluentTextField type="password" Name="Input.Password" @bind-Value="Input.Password" AutoComplete="current-password" Required="true" Placeholder="password" Label="Password" Style="width: 100%" />
+                <FluentValidationMessage For="() => Input.Password" class="text-danger" />
+                <FluentCheckbox Name="Input.RememberMe" @bind-Value="Input.RememberMe" Label="Remember me" />
+                <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" Style="width: 100%">Log in</FluentButton>
+                <div>
+                    <p>
+                        <FluentAnchor Appearance="Appearance.Hypertext" Href="Account/ForgotPassword">Forgot your password?</FluentAnchor>
+                    </p>
+                    <p>
+                        <FluentAnchor Appearance="Appearance.Hypertext" Href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</FluentAnchor>
+                    </p>
+                    <p>
+                        <FluentAnchor Appearance="Appearance.Hypertext" Href="Account/ResendEmailConfirmation">Resend email confirmation</FluentAnchor>
+                    </p>
+                </div>
+            </FluentStack>
+        </EditForm>
+    </FluentGridItem>
+</FluentGrid>
 
 @code {
-    private async Task LoginAsync()
+    private string? errorMessage;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    public async Task LoginUser()
     {
-        var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
-        bool result = await authModule.InvokeAsync<bool>("loginAsync", "test@test.com", "MyPassword");
-
-        Console.WriteLine(result);
-
+        var result = await AuthClient.LoginAsync();
+        if (result)
+        {
+            NavigationManager.NavigateTo(ReturnUrl);
+        }
+        else
+        {
+            errorMessage = "Error: Invalid login attempt.";
+        }
     }
 
-    private async Task LogoutAsync()
+    private sealed class InputModel
     {
-        var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
-        await authModule.InvokeVoidAsync("logoutAsync");
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = "";
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; } = "";
+
+        [Display(Name = "Remember me?")]
+        public bool RememberMe { get; set; }
     }
 }
