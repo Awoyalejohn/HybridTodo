@@ -1,7 +1,9 @@
-﻿namespace HybridTodo.Shared.Clients;
+﻿using HybridTodo.Api.DTOs;
+
+namespace HybridTodo.Shared.Clients;
 
 public interface IAuthClient
 {
-    Task<bool> LoginAsync();
+    Task<bool> LoginAsync(LoginRequest request);
     Task LogoutAsync();
 }

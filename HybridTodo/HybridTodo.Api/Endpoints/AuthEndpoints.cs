@@ -14,8 +14,13 @@ public static class AuthEndpoints
         return app;
     }
 
-    public static SignInHttpResult Login(LoginRequest request)
+    public static Results<SignInHttpResult, UnauthorizedHttpResult> Login(LoginRequest request)
     {
+        if (request.Email != "test@test.com" || request.Password != "Password1234")
+        {
+            return TypedResults.Unauthorized();
+        }
+
         List<Claim> claims =
         [
             new Claim(ClaimTypes.NameIdentifier, request.Email),
