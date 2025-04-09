@@ -1,7 +1,7 @@
 using HybridTodo.Shared.Clients;
 using HybridTodo.Shared.Services;
 using HybridTodo.Web;
-using HybridTodo.Web.Client.Clients;
+using HybridTodo.Web.Clients;
 using HybridTodo.Web.Components;
 using HybridTodo.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,7 +20,10 @@ builder.Services.AddCascadingAuthenticationState();
 
 // Add device-specific services used by the HybridTodo.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
-builder.Services.AddScoped<IAuthClient, AuthClient>();
+//builder.Services.AddScoped<IAuthClient, AuthClient>();
+//builder.Services.AddHttpClient<IAuthClient, AuthClient>();
+builder.Services.AddKeyedScoped<IAuthClient, AuthClient>("Web.Server");
+builder.Services.AddKeyedScoped<IAuthClient, HybridTodo.Web.Client.Clients.AuthClient>("Web.Client");
 
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

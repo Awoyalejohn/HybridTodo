@@ -1,4 +1,6 @@
-﻿using HybridTodo.Shared;
+﻿using HybridTodo.Api.DTOs;
+using HybridTodo.Shared;
+using HybridTodo.Shared.Clients;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -20,8 +22,10 @@ public static class AuthEndpoints
         return app;
     }
 
-    public static async Task<Results<NoContent, BadRequest>> Login(UserInfo userInfo, HttpContext httpContext)
+    public static async Task<Results<NoContent, BadRequest>> Login(UserInfo userInfo, HttpContext httpContext, IAuthClient authClient)
     {
+        var request = new LoginRequest { Email = userInfo.Email, Password = userInfo.Password };
+        var result  = await authClient.LoginAsync(request);
         var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
         identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userInfo.Email));
         identity.AddClaim(new Claim(ClaimTypes.Name, userInfo.Email));
