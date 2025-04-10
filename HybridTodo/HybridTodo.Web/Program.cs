@@ -20,10 +20,9 @@ builder.Services.AddCascadingAuthenticationState();
 
 // Add device-specific services used by the HybridTodo.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
-//builder.Services.AddScoped<IAuthClient, AuthClient>();
-//builder.Services.AddHttpClient<IAuthClient, AuthClient>();
-builder.Services.AddKeyedScoped<IAuthClient, AuthClient>("Web.Server");
-builder.Services.AddKeyedScoped<IAuthClient, HybridTodo.Web.Client.Clients.AuthClient>("Web.Client");
+
+builder.Services.AddHttpClient<IAuthClient, AuthClient>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
