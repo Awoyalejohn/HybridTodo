@@ -1,7 +1,7 @@
 @page "/Account/Login"
 @using System.ComponentModel.DataAnnotations
-@using HybridTodo.Api.DTOs
 @using HybridTodo.Shared.Clients
+@using HybridTodo.Shared.DTOs
 @inject IAuthClient AuthClient
 @inject NavigationManager NavigationManager
 
@@ -53,9 +53,9 @@
         var request = new LoginRequest { Email = Input.Email, Password = Input.Password };
 
         var result = await AuthClient.LoginAsync(request);
-        if (result)
+        if (result != null)
         {
-            NavigationManager.NavigateTo(ReturnUrl);
+            NavigationManager.NavigateTo("/");
         }
         else
         {

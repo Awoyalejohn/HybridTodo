@@ -1,6 +1,6 @@
-﻿using HybridTodo.Api.DTOs;
-using HybridTodo.Shared.Clients;
+﻿using HybridTodo.Shared.Clients;
 using Microsoft.JSInterop;
+using HybridTodo.Shared.DTOs;
 
 namespace HybridTodo.Web.Client.Clients;
 
@@ -13,10 +13,10 @@ public class AuthClient : IAuthClient
         _jSRuntime = jSRuntime;
     }
 
-    public async Task<bool> LoginAsync(LoginRequest request)
+    public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
         var authModule = await _jSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
-        bool result = await authModule.InvokeAsync<bool>("loginAsync", request.Email, request.Password);
+        var result = await authModule.InvokeAsync<LoginResponse>("loginAsync", request.Email, request.Password);
         return result;
     }
 

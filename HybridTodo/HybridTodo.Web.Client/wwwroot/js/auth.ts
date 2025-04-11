@@ -1,4 +1,4 @@
-export async function loginAsync(email: string, password: string): Promise<boolean> {
+export async function loginAsync(email: string, password: string){
     const url = "/api/auth/login";
     var data = {
         email: email,
@@ -15,12 +15,12 @@ export async function loginAsync(email: string, password: string): Promise<boole
     try {
         const response = await fetch(url, options);
         if (!response.ok) {
-            return false;
+            return null;
         } else {
-            return true;
+            return await response.json();
         }
     } catch (error) {
-        return false;
+        return null;
     }
 }
 

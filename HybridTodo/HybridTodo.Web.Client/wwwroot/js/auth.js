@@ -14,14 +14,14 @@ export async function loginAsync(email, password) {
     try {
         const response = await fetch(url, options);
         if (!response.ok) {
-            return false;
+            return null;
         }
         else {
-            return true;
+            return await response.json();
         }
     }
     catch (error) {
-        return false;
+        return null;
     }
 }
 export async function logoutAsync() {

@@ -1,4 +1,4 @@
-﻿namespace HybridTodo.Api.DTOs;
+﻿namespace HybridTodo.Shared.DTOs;
 
 public class LoginRequest
 {

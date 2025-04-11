@@ -1,8 +1,8 @@
 ﻿using HybridTodo.Api.Constants;
-using HybridTodo.Api.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Security.Claims;
+using HybridTodo.Shared.DTOs;
 
 namespace HybridTodo.Api.Endpoints;
 

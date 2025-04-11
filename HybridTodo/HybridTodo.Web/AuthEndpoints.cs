@@ -1,6 +1,6 @@
-﻿using HybridTodo.Api.DTOs;
-using HybridTodo.Shared;
-using HybridTodo.Shared.Clients;
+﻿using HybridTodo.Shared.Clients;
+using HybridTodo.Shared.Constants;
+using HybridTodo.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -13,49 +13,33 @@ public static class AuthEndpoints
     public static IEndpointRouteBuilder MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/api/auth/login", Login).WithTags("Auth");
-        app.MapPost("/api/auth/logout", async (HttpContext httpContext) =>
-        {
-            await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return TypedResults.NoContent();
-        }).WithTags("Auth");
-
+        app.MapPost("/api/auth/logout", Logout).WithTags("Auth");
         return app;
     }
 
-    public static async Task<Results<NoContent, BadRequest>> Login(UserInfo userInfo, HttpContext httpContext, IAuthClient authClient)
+    public static async Task<Results<Ok<LoginResponse>, BadRequest>> Login(LoginRequest request, HttpContext httpContext, IAuthClient authClient)
     {
-        var request = new LoginRequest { Email = userInfo.Email, Password = userInfo.Password };
-        var result  = await authClient.LoginAsync(request);
+        var result = await authClient.LoginAsync(request);
         var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-        identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userInfo.Email));
-        identity.AddClaim(new Claim(ClaimTypes.Name, userInfo.Email));
+        identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, request.Email));
+        identity.AddClaim(new Claim(ClaimTypes.Name, request.Email));
 
         var properties = new AuthenticationProperties();
 
-        //properties.StoreTokens([
-        //    new AuthenticationToken { Name = TokenNames.AccessToken, Value = token }
-        //]);
-
-        //return Results.SignIn(new ClaimsPrincipal(identity),
-        //    properties: properties,
-        //    authenticationScheme: CookieAuthenticationDefaults.AuthenticationScheme);
+        properties.StoreTokens([
+            new AuthenticationToken { Name = AuthConstants.AccessToken, Value = result.AccessToken }
+        ]);
 
         var principal = new ClaimsPrincipal(identity);
 
+        await httpContext.SignInAsync(
+            scheme: CookieAuthenticationDefaults.AuthenticationScheme,
+            principal: principal,
+            properties: properties
+            );
 
-        //return TypedResults.SignIn(principal);
-
-        await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-        // Redirect to a new endpoint to ensure the browser processes the cookie
-        //return  TypedResults.Redirect("https://localhost:7175/login-success");
-
-        return TypedResults.NoContent();
+        return TypedResults.Ok(result);
     }
 
-    //public static async Task<NoContent> Logout(HttpContext httpContext)
-    //{
-    //    await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-    //    return TypedResults.NoContent();
-    //}
+    public static SignOutHttpResult Logout() => TypedResults.SignOut(null, [CookieAuthenticationDefaults.AuthenticationScheme]);
 }
