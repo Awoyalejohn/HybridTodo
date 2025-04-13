@@ -1,4 +1,4 @@
-﻿namespace HybridTodo.Api.Constants;
+﻿namespace HybridTodo.Shared.Constants;
 
 public static class Tags
 {

@@ -1,5 +1,5 @@
-﻿using HybridTodo.Api.Constants;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using HybridTodo.Shared.Constants;
 
 namespace HybridTodo.Api.Endpoints;
 

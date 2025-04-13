@@ -21,29 +21,22 @@ public class AuthClient : IAuthClient
     public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
         if ((_httpContextAccessor?.HttpContext?.WebSockets.IsWebSocketRequest) == true) // Running inside Browser
-        {
+        {// Uses JavaScript to call the Login endpoint because SignalR/WebSockets cant set or remove cookies.
             var authModule = await _jSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
             var result = await authModule.InvokeAsync<LoginResponse>("loginAsync", request.Email, request.Password);
             return result;
         }
         else // Running from Endpoint
         {
-            var response = await _httpClient.PostAsJsonAsync("api/auth",request);
+            var response = await _httpClient.PostAsJsonAsync("api/auth/login",request);
             var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
             return result;
         }
     }
 
     public async Task LogoutAsync()
-    {
-        if ((_httpContextAccessor?.HttpContext?.WebSockets.IsWebSocketRequest) == true) // Running inside Browser
-        {
-            var authModule = await _jSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
-            await authModule.InvokeVoidAsync("logoutAsync");
-        }
-        else // Running from Endpoint
-        {
-            await Task.CompletedTask;
-        }
+    {// Uses JavaScript to call the Logout endpoint because SignalR/WebSockets cant set or remove cookies.
+        var authModule = await _jSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
+        await authModule.InvokeVoidAsync("logoutAsync");
     }
 }

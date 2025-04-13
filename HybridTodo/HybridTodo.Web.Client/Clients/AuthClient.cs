@@ -1,28 +1,27 @@
 ﻿using HybridTodo.Shared.Clients;
-using Microsoft.JSInterop;
 using HybridTodo.Shared.DTOs;
+using System.Net.Http.Json;
 
 namespace HybridTodo.Web.Client.Clients;
 
 public class AuthClient : IAuthClient
 {
-    private readonly IJSRuntime _jSRuntime;
+    private readonly HttpClient _httpClient;
 
-    public AuthClient(IJSRuntime jSRuntime)
+    public AuthClient(HttpClient httpClient)
     {
-        _jSRuntime = jSRuntime;
+        _httpClient = httpClient;
     }
 
     public async Task<LoginResponse> LoginAsync(LoginRequest request)
     {
-        var authModule = await _jSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
-        var result = await authModule.InvokeAsync<LoginResponse>("loginAsync", request.Email, request.Password);
+        var response = await _httpClient.PostAsJsonAsync("api/auth/login", request);
+        var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
         return result;
     }
 
     public async Task LogoutAsync()
     {
-        var authModule = await _jSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
-        await authModule.InvokeVoidAsync("logoutAsync");
+        await _httpClient.PostAsync("api/auth/logout", null);
     }
 }

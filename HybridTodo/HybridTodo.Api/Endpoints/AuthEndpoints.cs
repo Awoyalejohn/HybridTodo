@@ -1,8 +1,8 @@
-﻿using HybridTodo.Api.Constants;
+﻿using HybridTodo.Shared.Constants;
+using HybridTodo.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Security.Claims;
-using HybridTodo.Shared.DTOs;
 
 namespace HybridTodo.Api.Endpoints;
 
@@ -10,7 +10,7 @@ public static class AuthEndpoints
 {
     public static IEndpointRouteBuilder MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/auth", Login).WithTags(Tags.Auth);
+        app.MapPost("/api/auth/login", Login).WithTags(Tags.Auth);
         return app;
     }
 
