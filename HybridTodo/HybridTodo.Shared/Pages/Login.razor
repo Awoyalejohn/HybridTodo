@@ -6,6 +6,7 @@
 @inject IAuthClient AuthClient
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
+@inject IToastService ToastService
 
 
 <PageTitle>Login</PageTitle>
@@ -42,8 +43,6 @@
 </FluentGrid>
 
 @code {
-    private string? errorMessage;
-
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
 
@@ -55,13 +54,13 @@
         var request = new LoginRequest { Email = Input.Email, Password = Input.Password };
 
         var result = await AuthClient.LoginAsync(request);
-        if (result != null)
+        if (result.IsSuccess)
         {
-            NavigationManager.NavigateTo("/", forceLoad: true);
+            NavigationManager.NavigateTo(ReturnUrl ?? "/", forceLoad: true);
         }
         else
         {
-            errorMessage = "Error: Invalid login attempt.";
+            ToastService.ShowError(result.Error.Message);
         }
     }
 

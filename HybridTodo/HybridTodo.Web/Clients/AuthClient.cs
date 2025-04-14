@@ -1,6 +1,7 @@
-﻿using HybridTodo.Shared.Clients;
-using Microsoft.JSInterop;
+﻿using HybridTodo.Shared.Abstractions;
+using HybridTodo.Shared.Clients;
 using HybridTodo.Shared.DTOs;
+using Microsoft.JSInterop;
 
 namespace HybridTodo.Web.Clients;
 
@@ -10,27 +11,38 @@ public class AuthClient : IAuthClient
     private readonly IJSRuntime _jSRuntime;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AuthClient(HttpClient httpClient, IConfiguration configuration, IJSRuntime jSRuntime, IHttpContextAccessor httpContextAccessor)
+    public AuthClient(HttpClient httpClient, IJSRuntime jSRuntime, IHttpContextAccessor httpContextAccessor)
     {
         _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri(configuration["HybridTodoApiUrl"] ?? throw new ArgumentNullException("HybridTodoApiUrl"));
         _jSRuntime = jSRuntime;
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<LoginResponse> LoginAsync(LoginRequest request)
+    public async Task<Result<LoginResponse>> LoginAsync(LoginRequest request)
     {
         if ((_httpContextAccessor?.HttpContext?.WebSockets.IsWebSocketRequest) == true) // Running inside Browser
         {// Uses JavaScript to call the Login endpoint because SignalR/WebSockets cant set or remove cookies.
             var authModule = await _jSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
-            var result = await authModule.InvokeAsync<LoginResponse>("loginAsync", request.Email, request.Password);
+            var result = await authModule.InvokeAsync<Result<LoginResponse>>("loginAsync", request.Email, request.Password);
             return result;
         }
         else // Running from Endpoint
         {
-            var response = await _httpClient.PostAsJsonAsync("api/auth/login",request);
-            var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-            return result;
+            //var response = await _httpClient.PostAsJsonAsync("api/auth/login",request);
+            //var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+            //return result;
+
+            var response = await _httpClient.PostAsJsonAsync("api/auth/login", request);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+                return result;
+            }
+            else
+            {
+                var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+                return Result.Failure<LoginResponse>(result?.ToError() ?? Error.NullValue);
+            }
         }
     }
 

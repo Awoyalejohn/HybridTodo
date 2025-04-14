@@ -1,4 +1,5 @@
-﻿using HybridTodo.Shared.Clients;
+﻿using HybridTodo.Shared.Abstractions;
+using HybridTodo.Shared.Clients;
 using HybridTodo.Shared.DTOs;
 using System.Net.Http.Json;
 
@@ -13,11 +14,22 @@ public class AuthClient : IAuthClient
         _httpClient = httpClient;
     }
 
-    public async Task<LoginResponse> LoginAsync(LoginRequest request)
+    public async Task<Result<LoginResponse>> LoginAsync(LoginRequest request)
     {
+        //var response = await _httpClient.PostAsJsonAsync("api/auth/login", request);
+        //var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+        //return result;
         var response = await _httpClient.PostAsJsonAsync("api/auth/login", request);
-        var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-        return result;
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+            return result;
+        }
+        else
+        {
+            var result = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            return Result.Failure<LoginResponse>(result?.ToError() ?? Error.NullValue);
+        }
     }
 
     public async Task LogoutAsync()

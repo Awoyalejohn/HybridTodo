@@ -1,4 +1,6 @@
-﻿using HybridTodo.Shared.Constants;
+﻿using HybridTodo.Api.Errors;
+using HybridTodo.Api.Extensions;
+using HybridTodo.Shared.Constants;
 using HybridTodo.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -14,11 +16,11 @@ public static class AuthEndpoints
         return app;
     }
 
-    public static Results<SignInHttpResult, UnauthorizedHttpResult> Login(LoginRequest request)
+    public static Results<SignInHttpResult, ProblemHttpResult> Login(LoginRequest request)
     {
         if (request.Email != "test@test.com" || request.Password != "Password1234")
         {
-            return TypedResults.Unauthorized();
+            return TypedResults.Problem(AuthError.LoginFailed.ToProblemDetails());
         }
 
         List<Claim> claims =

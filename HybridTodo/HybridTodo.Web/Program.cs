@@ -14,19 +14,24 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents()
     .AddAuthenticationStateSerialization();
-builder.Services.AddFluentUIComponents();
+
 
 builder.Services.AddCascadingAuthenticationState();
 
 // Add device-specific services used by the HybridTodo.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
-builder.Services.AddHttpClient<IAuthClient, AuthClient>();
+builder.Services.AddHttpClient<IAuthClient, AuthClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["HybridTodoApiUrl"] ?? throw new ArgumentNullException("HybridTodoApiUrl"));
+});
 builder.Services.AddHttpContextAccessor();
 
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie();
+
+builder.Services.AddFluentUIComponents();
 
 
 // Configure the HttpClient for the backend API

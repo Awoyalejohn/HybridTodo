@@ -15,9 +15,9 @@ export async function loginAsync(email: string, password: string){
     try {
         const response = await fetch(url, options);
         if (!response.ok) {
-            return null;
+            return { isFailure: true, error: { code: "Auth.LoginFailed", message: "Login failed, please check your email address and password", type: 2 } };
         } else {
-            return await response.json();
+            return { isSuccess: true, value: await response.json(), error: {code : "", message: "", type: 0} };
         }
     } catch (error) {
         return null;
