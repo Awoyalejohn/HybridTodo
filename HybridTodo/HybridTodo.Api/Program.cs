@@ -12,6 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
 
+// Configure data protection, setup the application discriminator
+// so that the data protection keys can be shared between the BFF and this API
+builder.Services.AddDataProtection(o => o.ApplicationDiscriminator = "HybridTodo");
+
 builder.Services.AddAuthentication().AddBearerToken(JwtBearerDefaults.AuthenticationScheme);
 builder.Services.AddAuthorization();
 

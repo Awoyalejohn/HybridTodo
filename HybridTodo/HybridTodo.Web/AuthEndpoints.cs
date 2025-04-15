@@ -30,7 +30,8 @@ public static class AuthEndpoints
             var properties = new AuthenticationProperties();
 
             properties.StoreTokens([
-                new AuthenticationToken { Name = AuthConstants.AccessToken, Value = result.Value.AccessToken }
+                new AuthenticationToken { Name = AuthConstants.AccessToken, Value = result.Value.AccessToken },
+                new AuthenticationToken { Name = AuthConstants.RefreshToken, Value = result.Value.RefreshToken }
             ]);
 
             var principal = new ClaimsPrincipal(identity);
@@ -41,7 +42,6 @@ public static class AuthEndpoints
                 properties: properties
                 );
 
-            //return TypedResults.Ok(result);
             return TypedResults.Ok(result.Value);
         }
         else

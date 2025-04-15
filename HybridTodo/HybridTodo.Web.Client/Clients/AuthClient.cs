@@ -16,9 +16,6 @@ public class AuthClient : IAuthClient
 
     public async Task<Result<LoginResponse>> LoginAsync(LoginRequest request)
     {
-        //var response = await _httpClient.PostAsJsonAsync("api/auth/login", request);
-        //var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-        //return result;
         var response = await _httpClient.PostAsJsonAsync("api/auth/login", request);
         if (response.IsSuccessStatusCode)
         {
@@ -35,5 +32,10 @@ public class AuthClient : IAuthClient
     public async Task LogoutAsync()
     {
         await _httpClient.PostAsync("api/auth/logout", null);
+    }
+
+    public Task<Result<LoginResponse>> RefreshAccessTokenAsync(string refreshToken)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -28,10 +28,6 @@ public class AuthClient : IAuthClient
         }
         else // Running from Endpoint
         {
-            //var response = await _httpClient.PostAsJsonAsync("api/auth/login",request);
-            //var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-            //return result;
-
             var response = await _httpClient.PostAsJsonAsync("api/auth/login", request);
             if (response.IsSuccessStatusCode)
             {
@@ -50,5 +46,10 @@ public class AuthClient : IAuthClient
     {// Uses JavaScript to call the Logout endpoint because SignalR/WebSockets cant set or remove cookies.
         var authModule = await _jSRuntime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
         await authModule.InvokeVoidAsync("logoutAsync");
+    }
+
+    public Task<Result<LoginResponse>> RefreshAccessTokenAsync(string refreshToken)
+    {
+        throw new NotImplementedException();
     }
 }

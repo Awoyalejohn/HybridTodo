@@ -7,4 +7,5 @@ public interface IAuthClient
 {
     Task<Result<LoginResponse>> LoginAsync(LoginRequest request);
     Task LogoutAsync();
+    Task<Result<LoginResponse>> RefreshAccessTokenAsync(string refreshToken);
 }

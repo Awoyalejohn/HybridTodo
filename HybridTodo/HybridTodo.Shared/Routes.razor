@@ -1,6 +1,9 @@
-﻿<Router AppAssembly="typeof(Layout.MainLayout).Assembly">
+﻿<Router AppAssembly="typeof(Layout.MainLayout).Assembly" AdditionalAssemblies="new[] { typeof(Shared._Imports).Assembly }">
     <Found Context="routeData">
-        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
+       <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)">
+            <Authorizing>
+                Authorizing...
+            </Authorizing>
             <NotAuthorized>
                 <RedirectToLogin />
             </NotAuthorized>
