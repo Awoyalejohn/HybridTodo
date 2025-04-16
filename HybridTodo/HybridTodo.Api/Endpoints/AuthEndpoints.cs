@@ -3,7 +3,6 @@ using HybridTodo.Api.Extensions;
 using HybridTodo.Shared.Constants;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -38,18 +37,18 @@ public static class AuthEndpoints
 
         var properties = new AuthenticationProperties();
         // Store the external provider name so we can do remote sign out
-        properties.SetString(JwtBearerDefaults.AuthenticationScheme, JwtBearerDefaults.AuthenticationScheme);
+        properties.SetString(BearerTokenDefaults.AuthenticationScheme, BearerTokenDefaults.AuthenticationScheme);
 
-        var identity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
+        var identity = new ClaimsIdentity(claims, BearerTokenDefaults.AuthenticationScheme);
 
         var principal = new ClaimsPrincipal(identity);
 
-        return TypedResults.SignIn(principal, properties: properties, authenticationScheme: JwtBearerDefaults.AuthenticationScheme);
+        return TypedResults.SignIn(principal, properties: properties, authenticationScheme: BearerTokenDefaults.AuthenticationScheme);
     }
 
     public static Results<SignInHttpResult, ProblemHttpResult> RefreshToken(RefreshRequest request, [FromServices] IOptionsMonitor<BearerTokenOptions> bearerTokenOptions, [FromServices] TimeProvider timeProvider)
     {
-        var refreshTokenProtector = bearerTokenOptions.Get(JwtBearerDefaults.AuthenticationScheme).RefreshTokenProtector;
+        var refreshTokenProtector = bearerTokenOptions.Get(BearerTokenDefaults.AuthenticationScheme).RefreshTokenProtector;
         var refreshTicket = refreshTokenProtector.Unprotect(request.RefreshToken);
 
         // Reject the /refresh attempt with a 401 if the token expired or the security stamp validation fails
@@ -60,6 +59,6 @@ public static class AuthEndpoints
             return TypedResults.Problem(AuthError.InvalidRefreshToken.ToProblemDetails());
         }
 
-        return TypedResults.SignIn(refreshTicket.Principal, authenticationScheme: JwtBearerDefaults.AuthenticationScheme);
+        return TypedResults.SignIn(refreshTicket.Principal, authenticationScheme: BearerTokenDefaults.AuthenticationScheme);
     }
 }

@@ -33,9 +33,10 @@ internal sealed class AuthClient : IAuthClient
         }
     }
 
-    public Task LogoutAsync()
+    public async Task LogoutAsync()
     {
-        throw new NotImplementedException();
+        ((MauiAuthenticationStateProvider)_authenticationStateProvider).Logout();
+        await Task.CompletedTask;
     }
 
     public async Task<Result<LoginResponse>> RefreshAccessTokenAsync(string refreshToken)

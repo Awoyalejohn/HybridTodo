@@ -1,9 +1,8 @@
 ﻿using HybridTodo.Abstractions.Services;
 using HybridTodo.Shared.Constants;
 using HybridTodo.Shared.DTOs;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 //using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -14,7 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Security.Claims;
-using Windows.Security.Cryptography.DataProtection;
 
 namespace HybridTodo;
 
@@ -197,9 +195,17 @@ internal sealed class MauiAuthenticationStateProvider : AuthenticationStateProvi
 
     private ClaimsPrincipal CreateAuthenticatedUser(string token)
     {
-        var tokenProtector = _dataProtectionProvider.CreateProtector(JwtBearerDefaults.AuthenticationScheme);
-        string ticket = tokenProtector.Unprotect(token);
-        //var bearerTokenProtector = _bearerTokenOptions.Get(JwtBearerDefaults.AuthenticationScheme).BearerTokenProtector;
+        var tokenProtector = _dataProtectionProvider.CreateProtector("HybridTodo", BearerTokenDefaults.AuthenticationScheme);
+        var ticketFormat = new TicketDataFormat(tokenProtector);
+
+        AuthenticationTicket ticket = ticketFormat.Unprotect(token);
+
+        var claimsPrincipal = ticket.Principal;
+
+        //string ticket = tokenProtector.Unprotect(token);
+
+
+        //var bearerTokenProtector = _bearerTokenOptions.Get(BearerTokenDefaults.AuthenticationScheme).BearerTokenProtector;
         //var authenticationTicket = bearerTokenProtector.Unprotect(token);
 
         var jsonTokenHandlder = new JsonWebTokenHandler();
@@ -209,7 +215,7 @@ internal sealed class MauiAuthenticationStateProvider : AuthenticationStateProvi
         {
             throw new SecurityTokenException("JWT no longer valid");
         }
-        var identity = new ClaimsIdentity(jsonWebToken.Claims, AuthConstants.Bearer);
+        var identity = new ClaimsIdentity(jsonWebToken.Claims, BearerTokenDefaults.AuthenticationScheme);
         return new ClaimsPrincipal(identity);
     }
 }

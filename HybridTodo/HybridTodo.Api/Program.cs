@@ -1,10 +1,13 @@
 using HybridTodo.Api;
 using HybridTodo.Api.Endpoints;
 using HybridTodo.Api.Extensions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http.Features;
 using Scalar.AspNetCore;
 using System.Diagnostics;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +19,21 @@ builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
 // so that the data protection keys can be shared between the BFF and this API
 builder.Services.AddDataProtection(o => o.ApplicationDiscriminator = "HybridTodo");
 
-builder.Services.AddAuthentication().AddBearerToken(JwtBearerDefaults.AuthenticationScheme);
+//builder.Services.AddAuthentication().AddBearerToken(BearerTokenDefaults.AuthenticationScheme);
+
+builder.Services.AddAuthentication()
+    .AddBearerToken(BearerTokenDefaults.AuthenticationScheme, o =>
+    {
+        var serviceProvider = builder.Services.BuildServiceProvider();
+        var dataProtectionProvider = serviceProvider.GetRequiredService<IDataProtectionProvider>();
+
+        // Purpose chain must match exactly between apps
+        var bearerProtector = dataProtectionProvider.CreateProtector("HybridTodo", BearerTokenDefaults.AuthenticationScheme);
+        var refreshProtector = dataProtectionProvider.CreateProtector("HybridTodo", "RefreshToken");
+
+        o.BearerTokenProtector = new TicketDataFormat(bearerProtector);
+        o.RefreshTokenProtector = new TicketDataFormat(refreshProtector);
+    });
 builder.Services.AddAuthorization();
 
 builder.Services.AddProblemDetails(options =>
@@ -43,7 +60,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference(options =>
     {
         options.Servers = [];
-        options.Authentication = new() { PreferredSecurityScheme = JwtBearerDefaults.AuthenticationScheme };
+        options.Authentication = new() { PreferredSecurityScheme = BearerTokenDefaults.AuthenticationScheme };
     });
 }
 
