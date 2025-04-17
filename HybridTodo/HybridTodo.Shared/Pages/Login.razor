@@ -3,10 +3,12 @@
 @using HybridTodo.Shared.Clients
 @using HybridTodo.Shared.DTOs
 @using System.Security.Claims
+@using HybridTodo.Shared.Services
 @inject IAuthClient AuthClient
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IToastService ToastService
+@inject IFormFactor FormFactor
 
 
 <PageTitle>Login</PageTitle>
@@ -56,7 +58,14 @@
         var result = await AuthClient.LoginAsync(request);
         if (result.IsSuccess)
         {
-            NavigationManager.NavigateTo(ReturnUrl ?? "/", forceLoad: true);
+            if (FormFactor.GetFormFactor().StartsWith("Web"))
+            {
+                NavigationManager.NavigateTo(ReturnUrl ?? "/", forceLoad: true);
+            }
+            else
+            {
+                NavigationManager.NavigateTo(ReturnUrl ?? "/");
+            }
         }
         else
         {

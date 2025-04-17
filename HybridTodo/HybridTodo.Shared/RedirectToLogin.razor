@@ -1,8 +1,17 @@
+@using HybridTodo.Shared.Services
 @inject NavigationManager NavigationManager
+@inject IFormFactor FormFactor
 
 @code {
     protected override void OnInitialized()
     {
-        NavigationManager.NavigateTo($"Account/Login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}", forceLoad: true);
+        if (FormFactor.GetFormFactor().StartsWith("Web"))
+        {
+            NavigationManager.NavigateTo($"Account/Login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}", forceLoad: true);
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"Account/Login?returnUrl={Uri.EscapeDataString(NavigationManager.Uri)}");
+        }
     }
 }

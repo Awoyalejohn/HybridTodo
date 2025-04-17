@@ -1,8 +1,8 @@
 using HybridTodo.Shared.Clients;
 using HybridTodo.Shared.Services;
-using HybridTodo.Web;
 using HybridTodo.Web.Clients;
 using HybridTodo.Web.Components;
+using HybridTodo.Web.Endpoints;
 using HybridTodo.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.FluentUI.AspNetCore.Components;
@@ -28,6 +28,19 @@ builder.Services.AddHttpClient<IAuthClient, AuthClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["HybridTodoApiUrl"] ?? throw new ArgumentNullException("HybridTodoApiUrl"));
 });
+
+builder.Services.AddHttpClient<ITodoClient, HybridTodo.Web.Client.Clients.TodoClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["BaseAddress"] ?? throw new ArgumentNullException("BaseAddress"));
+
+    // The cookie auth stack detects this header and avoids redirects for unauthenticated requests
+    client.DefaultRequestHeaders.TryAddWithoutValidation("X-Requested-With", "XMLHttpRequest");
+});
+
+// Add the forwarder to make sending requests to the backend easier
+builder.Services.AddHttpForwarder();
+//builder.Services.AddHttpForwarderWithServiceDiscovery();
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services
@@ -72,5 +85,6 @@ app.MapRazorComponents<App>()
 
 
 app.MapAuthEndpoints();
+app.MapTodoEndpoints();
 
 app.Run();

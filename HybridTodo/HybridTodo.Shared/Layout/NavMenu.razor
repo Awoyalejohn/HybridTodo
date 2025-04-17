@@ -1,6 +1,8 @@
 ﻿@using HybridTodo.Shared.Clients
+@using HybridTodo.Shared.Services
 @inject IAuthClient AuthClient
 @inject NavigationManager NavigationManager
+@inject IFormFactor FormFactor
 
 <div class="navmenu">
     <input type="checkbox" title="Menu expand/collapse toggle" id="navmenu-toggle" class="navmenu-icon" />
@@ -11,9 +13,17 @@
             <FluentNavLink Href="counter" Icon="@(new Icons.Regular.Size20.NumberSymbolSquare())" IconColor="Color.Accent">Counter</FluentNavLink>
             <FluentNavLink Href="weather" Icon="@(new Icons.Regular.Size20.WeatherPartlyCloudyDay())" IconColor="Color.Accent">Weather</FluentNavLink>
             <FluentNavLink Href="auth" Icon="@(new Icons.Regular.Size20.LockClosedKey())" IconColor="Color.Accent">Auth Required</FluentNavLink>
-            <FluentNavLink Href="Account/Register">Register</FluentNavLink>
-            <FluentNavLink Href="Account/Login">Login</FluentNavLink>
-            <FluentNavLink OnClick="Logout">Logout</FluentNavLink>
+            <FluentNavLink Href="todo" Icon="@(new Icons.Regular.Size20.List())" IconColor="Color.Accent">Todo</FluentNavLink>
+            <AuthorizeView>
+                <Authorized>
+                    <FluentNavLink Href="/">@context.User.Identity?.Name</FluentNavLink>
+                    <FluentNavLink OnClick="Logout">Logout</FluentNavLink>
+                </Authorized>
+                <NotAuthorized>
+                    <FluentNavLink Href="Account/Register">Register</FluentNavLink>
+                    <FluentNavLink Href="Account/Login">Login</FluentNavLink>
+                </NotAuthorized>
+            </AuthorizeView>
         </FluentNavMenu>
     </nav>
 </div>
@@ -23,6 +33,13 @@
     private async Task Logout(MouseEventArgs args)
     {
         await AuthClient.LogoutAsync();
-        NavigationManager.NavigateTo("/", forceLoad: true);
+        if (FormFactor.GetFormFactor().StartsWith("Web"))
+        {
+            NavigationManager.NavigateTo("/", forceLoad: true);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
     }
 }

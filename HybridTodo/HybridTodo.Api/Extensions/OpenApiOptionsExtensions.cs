@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
@@ -13,17 +14,17 @@ public static class OpenApiOptionsExtensions
         {
             Type = SecuritySchemeType.Http,
             Name = "HybridTodo.Api",
-            Scheme = BearerTokenDefaults.AuthenticationScheme,
+            Scheme = JwtBearerDefaults.AuthenticationScheme,
             Reference = new()
             {
                 Type = ReferenceType.SecurityScheme,
-                Id = BearerTokenDefaults.AuthenticationScheme
+                Id = JwtBearerDefaults.AuthenticationScheme,
             }
         };
         options.AddDocumentTransformer((document, context, cancellationToken) =>
         {
             document.Components ??= new();
-            document.Components.SecuritySchemes.Add(BearerTokenDefaults.AuthenticationScheme, scheme);
+            document.Components.SecuritySchemes.Add(JwtBearerDefaults.AuthenticationScheme, scheme);
             return Task.CompletedTask;
         });
         options.AddOperationTransformer((operation, context, cancellationToken) =>

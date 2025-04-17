@@ -1,15 +1,10 @@
 ﻿using HybridTodo.Abstractions.Services;
-using HybridTodo.Shared.Constants;
 using HybridTodo.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
-
-//using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Security.Claims;
@@ -25,13 +20,8 @@ internal sealed class MauiAuthenticationStateProvider : AuthenticationStateProvi
 {
     private readonly ITokenStorageService _tokenStorageService;
     private readonly HttpClient _httpClient;
-    private readonly IOptionsMonitor<BearerTokenOptions> _bearerTokenOptions;
-    //private readonly TimeProvider timeProvider;
     private readonly IDataProtectionProvider _dataProtectionProvider;
 
-
-    //TODO: Place this in AppSettings or Client config file
-    private const string AuthenticationType = "Custom authentication";
     private const int TokenExpirationBuffer = 30; //minutes
 
     private static readonly ClaimsPrincipal _defaultUser = new ClaimsPrincipal(new ClaimsIdentity());
@@ -40,12 +30,11 @@ internal sealed class MauiAuthenticationStateProvider : AuthenticationStateProvi
     private Task<AuthenticationState> _currentAuthState = _defaultAuthState;
     private AccessTokenInfo? _accessToken;
 
-    public MauiAuthenticationStateProvider(ITokenStorageService tokenStorageService, HttpClient httpClient, IDataProtectionProvider dataProtectionProvider, IOptionsMonitor<BearerTokenOptions> bearerTokenOptions)
+    public MauiAuthenticationStateProvider(ITokenStorageService tokenStorageService, HttpClient httpClient, IDataProtectionProvider dataProtectionProvider)
     {
         _tokenStorageService = tokenStorageService;
         _httpClient = httpClient;
         _dataProtectionProvider = dataProtectionProvider;
-        _bearerTokenOptions = bearerTokenOptions;
     }
 
     public override Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -165,9 +154,6 @@ internal sealed class MauiAuthenticationStateProvider : AuthenticationStateProvi
             if (refreshToken != null)
             {
                 //Call the Refresh endpoint and pass the refresh token
-                //var tokenResult = await _authClient.RefreshAccessTokenAsync(refreshToken);
-
-
                 var response = await _httpClient.PostAsJsonAsync("api/auth/refresh", new { RefreshToken = refreshToken });
                 if (response.IsSuccessStatusCode)
                 {
@@ -176,11 +162,6 @@ internal sealed class MauiAuthenticationStateProvider : AuthenticationStateProvi
                     return true;
                 }
 
-                //if (tokenResult.IsSuccess)
-                //{
-                //    _accessToken = await _tokenStorageService.SaveTokenToSecureStorageAsync(tokenResult.Value);
-                //    return true;
-                //}
                 return false;
             }
 
@@ -198,24 +179,10 @@ internal sealed class MauiAuthenticationStateProvider : AuthenticationStateProvi
         var tokenProtector = _dataProtectionProvider.CreateProtector("HybridTodo", BearerTokenDefaults.AuthenticationScheme);
         var ticketFormat = new TicketDataFormat(tokenProtector);
 
-        AuthenticationTicket ticket = ticketFormat.Unprotect(token);
+        AuthenticationTicket bearerTicket = ticketFormat.Unprotect(token);
 
-        var claimsPrincipal = ticket.Principal;
+        var principal = bearerTicket.Principal;
 
-        //string ticket = tokenProtector.Unprotect(token);
-
-
-        //var bearerTokenProtector = _bearerTokenOptions.Get(BearerTokenDefaults.AuthenticationScheme).BearerTokenProtector;
-        //var authenticationTicket = bearerTokenProtector.Unprotect(token);
-
-        var jsonTokenHandlder = new JsonWebTokenHandler();
-        //var jsonWebToken = new JsonWebToken(token);
-        var jsonWebToken = jsonTokenHandlder.ReadJsonWebToken(token); ;
-        if (jsonWebToken.ValidTo < DateTime.Now)
-        {
-            throw new SecurityTokenException("JWT no longer valid");
-        }
-        var identity = new ClaimsIdentity(jsonWebToken.Claims, BearerTokenDefaults.AuthenticationScheme);
-        return new ClaimsPrincipal(identity);
+        return principal;
     }
 }

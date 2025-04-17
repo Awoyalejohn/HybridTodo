@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Security.Claims;
 
-namespace HybridTodo.Web;
+namespace HybridTodo.Web.Endpoints;
 
 public static class AuthEndpoints
 {

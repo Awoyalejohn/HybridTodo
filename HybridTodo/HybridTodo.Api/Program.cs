@@ -1,13 +1,14 @@
 using HybridTodo.Api;
 using HybridTodo.Api.Endpoints;
 using HybridTodo.Api.Extensions;
+using HybridTodo.Shared.Constants;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http.Features;
 using Scalar.AspNetCore;
 using System.Diagnostics;
-using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +20,6 @@ builder.Services.AddOpenApi(options => options.AddBearerTokenAuthentication());
 // so that the data protection keys can be shared between the BFF and this API
 builder.Services.AddDataProtection(o => o.ApplicationDiscriminator = "HybridTodo");
 
-//builder.Services.AddAuthentication().AddBearerToken(BearerTokenDefaults.AuthenticationScheme);
-
 builder.Services.AddAuthentication()
     .AddBearerToken(BearerTokenDefaults.AuthenticationScheme, o =>
     {
@@ -29,7 +28,7 @@ builder.Services.AddAuthentication()
 
         // Purpose chain must match exactly between apps
         var bearerProtector = dataProtectionProvider.CreateProtector("HybridTodo", BearerTokenDefaults.AuthenticationScheme);
-        var refreshProtector = dataProtectionProvider.CreateProtector("HybridTodo", "RefreshToken");
+        var refreshProtector = dataProtectionProvider.CreateProtector("HybridTodo", AuthConstants.RefreshToken);
 
         o.BearerTokenProtector = new TicketDataFormat(bearerProtector);
         o.RefreshTokenProtector = new TicketDataFormat(refreshProtector);
@@ -69,33 +68,11 @@ app.UseHttpsRedirection();
 app.UseExceptionHandler();
 app.UseAuthorization();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
 app.Map("/", () => Results.Redirect("/scalar/v1"));
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
 
 app.MapAuthEndpoints();
 app.MapTestAuthEndpoints();
+app.MapUserEndpoints();
+app.MapTodoEndpoints();
 
 app.Run();
-
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

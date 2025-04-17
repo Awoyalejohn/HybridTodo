@@ -1,0 +1,32 @@
+@page "/todo"
+
+@using HybridTodo.Shared.Clients
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+
+@inject ITodoClient TodoClient
+
+<PageTitle>Todo</PageTitle>
+
+@if(TodoItems == null)
+{
+    <h1>No Todo Items...</h1>
+}
+else
+{
+    foreach (var todoItems in TodoItems)
+    {
+        <h1>@todoItems</h1>
+    }
+}
+
+@code {
+    private string[] TodoItems = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var todos = await TodoClient.TestAsync();
+        TodoItems = todos;
+    }
+}
