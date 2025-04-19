@@ -14,7 +14,7 @@ public static class TodoEndpoints
 
         var group = routes.MapGroup("/api/todos");
 
-        //group.RequireAuthorization();
+        group.RequireAuthorization();
 
         group.MapForwarder("{*path}", "https://localhost:7262", new ForwarderRequestConfig(), b =>
         {
