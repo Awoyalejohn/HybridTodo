@@ -1,4 +1,4 @@
-﻿using HybridTodo.Shared.Clients;
+﻿using HybridTodo.Shared.Abstractions.Clients;
 using HybridTodo.Shared.Constants;
 using HybridTodo.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;

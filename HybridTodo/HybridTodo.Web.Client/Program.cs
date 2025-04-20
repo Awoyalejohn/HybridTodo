@@ -1,9 +1,10 @@
-using HybridTodo.Shared.Clients;
+using HybridTodo.Shared.Abstractions.Clients;
 using HybridTodo.Shared.Services;
 using HybridTodo.Web.Client.Clients;
 using HybridTodo.Web.Client.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.FluentUI.AspNetCore.Components;
+using HybridTodo.Shared.Clients;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 

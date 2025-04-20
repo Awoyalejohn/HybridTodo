@@ -1,4 +1,4 @@
-﻿namespace HybridTodo.Shared.Clients;
+﻿namespace HybridTodo.Shared.Abstractions.Clients;
 
 public interface ITodoClient
 {

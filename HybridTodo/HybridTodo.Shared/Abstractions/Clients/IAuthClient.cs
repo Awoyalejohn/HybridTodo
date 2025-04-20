@@ -1,7 +1,7 @@
 ﻿using HybridTodo.Shared.Abstractions;
 using HybridTodo.Shared.DTOs;
 
-namespace HybridTodo.Shared.Clients;
+namespace HybridTodo.Shared.Abstractions.Clients;
 
 public interface IAuthClient
 {

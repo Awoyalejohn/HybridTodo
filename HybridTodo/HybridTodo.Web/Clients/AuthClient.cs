@@ -1,5 +1,5 @@
 ﻿using HybridTodo.Shared.Abstractions;
-using HybridTodo.Shared.Clients;
+using HybridTodo.Shared.Abstractions.Clients;
 using HybridTodo.Shared.DTOs;
 using Microsoft.JSInterop;
 

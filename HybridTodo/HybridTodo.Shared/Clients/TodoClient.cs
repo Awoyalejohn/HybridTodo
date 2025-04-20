@@ -1,8 +1,8 @@
-﻿using HybridTodo.Shared.Clients;
+﻿using HybridTodo.Shared.Abstractions.Clients;
 using System.Net.Http.Json;
 
 
-namespace HybridTodo.Web.Client.Clients;
+namespace HybridTodo.Shared.Clients;
 
 public class TodoClient : ITodoClient
 {
@@ -15,7 +15,6 @@ public class TodoClient : ITodoClient
 
     public async Task<string[]> TestAsync()
     {
-        //var response = await _httpClient.GetAsync("api/todos/test");
         HttpResponseMessage response;
         try
         {

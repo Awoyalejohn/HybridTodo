@@ -21,7 +21,7 @@ public static class TodoEndpoints
             b.AddRequestTransform(async c =>
             {
                 var accessToken = await c.HttpContext.GetTokenAsync(AuthConstants.AccessToken);
-                c.ProxyRequest.Headers.Authorization = new("Bearer", accessToken);
+                c.ProxyRequest.Headers.Authorization = new(AuthConstants.Bearer, accessToken);
             });
         });
 

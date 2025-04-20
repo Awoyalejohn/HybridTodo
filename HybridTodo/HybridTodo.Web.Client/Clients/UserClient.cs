@@ -1,4 +1,4 @@
-﻿using HybridTodo.Shared.Clients;
+﻿using HybridTodo.Shared.Abstractions.Clients;
 using System.Net.Http.Json;
 
 

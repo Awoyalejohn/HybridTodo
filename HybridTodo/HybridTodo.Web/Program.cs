@@ -1,4 +1,4 @@
-using HybridTodo.Shared.Clients;
+using HybridTodo.Shared.Abstractions.Clients;
 using HybridTodo.Shared.Services;
 using HybridTodo.Web;
 using HybridTodo.Web.Clients;
@@ -31,7 +31,7 @@ builder.Services.AddHttpClient<IAuthClient, AuthClient>(client =>
 });
 
 builder.Services.AddScoped<CookieAppendingHandler>();
-builder.Services.AddHttpClient<ITodoClient, HybridTodo.Web.Client.Clients.TodoClient>(client =>
+builder.Services.AddHttpClient<ITodoClient, HybridTodo.Shared.Clients.TodoClient>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["BaseAddress"] ?? throw new ArgumentNullException("BaseAddress"));
 

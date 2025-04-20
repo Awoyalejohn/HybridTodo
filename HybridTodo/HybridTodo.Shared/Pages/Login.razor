@@ -1,8 +1,9 @@
 @page "/Account/Login"
 @using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+@using HybridTodo.Shared.Abstractions.Clients
 @using HybridTodo.Shared.Clients
 @using HybridTodo.Shared.DTOs
-@using System.Security.Claims
 @using HybridTodo.Shared.Services
 @inject IAuthClient AuthClient
 @inject NavigationManager NavigationManager

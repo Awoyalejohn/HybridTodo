@@ -1,6 +1,5 @@
 using HybridTodo.Clients;
 using HybridTodo.Services;
-using HybridTodo.Shared.Clients;
 using HybridTodo.Shared.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.FluentUI.AspNetCore.Components;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 using Microsoft.AspNetCore.Authentication.BearerToken;
+using HybridTodo.Shared.Abstractions.Clients;
 
 namespace HybridTodo
 {
@@ -49,6 +49,16 @@ namespace HybridTodo
             {
                 client.BaseAddress = new Uri(builder.Configuration["HybridTodoApiUrl"] ?? throw new ArgumentNullException("HybridTodoApiUrl"));
             });
+
+            builder.Services.AddScoped<TokenAppendingHandler>();
+            builder.Services.AddHttpClient<ITodoClient, Shared.Clients.TodoClient>(client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["HybridTodoApiUrl"] ?? throw new ArgumentNullException("HybridTodoApiUrl"));
+
+                // The cookie auth stack detects this header and avoids redirects for unauthenticated requests
+                client.DefaultRequestHeaders.TryAddWithoutValidation("X-Requested-With", "XMLHttpRequest");
+            })
+            .AddHttpMessageHandler<TokenAppendingHandler>();
 
             builder.Services.AddScoped<ITokenStorageService, TokenStorageService>();
             // This is our custom provider
