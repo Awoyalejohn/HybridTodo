@@ -1,0 +1,29 @@
+@page "/users"
+@using HybridTodo.Shared.Abstractions.Clients
+
+@attribute [Authorize]
+@inject IUserClient UserClient
+
+<PageTitle>Users</PageTitle>
+
+@if (UserList == null)
+{
+    <h1>No Todo Items...</h1>
+}
+else
+{
+    foreach (var user in UserList)
+    {
+        <h1>@user</h1>
+    }
+}
+
+@code {
+    private string[] UserList = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var users = await UserClient.TestAsync();
+        UserList = users;
+    }
+}

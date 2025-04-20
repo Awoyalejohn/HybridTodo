@@ -5,14 +5,14 @@ using Yarp.ReverseProxy.Transforms;
 
 namespace HybridTodo.Web.Endpoints;
 
-public static class TodoEndpoints
+public static class ForwardingEndpoints
 {
-    public static RouteGroupBuilder MapTodoEndpoints(this IEndpointRouteBuilder routes)
+    public static RouteGroupBuilder MapForwardingEndpoints(this IEndpointRouteBuilder routes)
     {
         // The todo API translates the authentication cookie between the browser the BFF into an 
         // access token that is sent to the todo API. We're using YARP to forward the request.
 
-        var group = routes.MapGroup("/api/todos");
+        var group = routes.MapGroup("/api");
 
         group.RequireAuthorization();
 

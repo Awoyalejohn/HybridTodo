@@ -40,6 +40,15 @@ builder.Services.AddHttpClient<ITodoClient, HybridTodo.Shared.Clients.TodoClient
 })
 .AddHttpMessageHandler<CookieAppendingHandler>();
 
+builder.Services.AddHttpClient<IUserClient, HybridTodo.Shared.Clients.UserClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["BaseAddress"] ?? throw new ArgumentNullException("BaseAddress"));
+
+    // The cookie auth stack detects this header and avoids redirects for unauthenticated requests
+    client.DefaultRequestHeaders.TryAddWithoutValidation("X-Requested-With", "XMLHttpRequest");
+})
+.AddHttpMessageHandler<CookieAppendingHandler>();
+
 // Add the forwarder to make sending requests to the backend easier
 builder.Services.AddHttpForwarder();
 //builder.Services.AddHttpForwarderWithServiceDiscovery();
@@ -88,6 +97,6 @@ app.MapRazorComponents<App>()
 
 
 app.MapAuthEndpoints();
-app.MapTodoEndpoints();
+app.MapForwardingEndpoints();
 
 app.Run();
