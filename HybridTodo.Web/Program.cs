@@ -61,13 +61,6 @@ builder.Services
 
 builder.Services.AddFluentUIComponents();
 
-
-// Configure the HttpClient for the backend API
-//builder.Services.AddHttpClient<AuthClient>(client =>
-//{
-//    client.BaseAddress = new("https://localhost:7175");
-//});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -97,6 +90,6 @@ app.MapRazorComponents<App>()
 
 
 app.MapAuthEndpoints();
-app.MapForwardingEndpoints();
+app.MapForwardingEndpoints(app.Configuration);
 
 app.Run();

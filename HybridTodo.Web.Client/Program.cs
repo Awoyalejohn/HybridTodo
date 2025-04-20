@@ -40,6 +40,5 @@ builder.Services.AddFluentUIComponents();
 
 // Add device-specific services used by the HybridTodo.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
-//builder.Services.AddScoped<IAuthClient, AuthClient>();
 
 await builder.Build().RunAsync();

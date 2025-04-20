@@ -7,7 +7,7 @@ namespace HybridTodo.Web.Endpoints;
 
 public static class ForwardingEndpoints
 {
-    public static RouteGroupBuilder MapForwardingEndpoints(this IEndpointRouteBuilder routes)
+    public static RouteGroupBuilder MapForwardingEndpoints(this IEndpointRouteBuilder routes, IConfiguration configuration)
     {
         // The todo API translates the authentication cookie between the browser the BFF into an 
         // access token that is sent to the todo API. We're using YARP to forward the request.
@@ -16,7 +16,7 @@ public static class ForwardingEndpoints
 
         group.RequireAuthorization();
 
-        group.MapForwarder("{*path}", "https://localhost:7262", new ForwarderRequestConfig(), b =>
+        group.MapForwarder("{*path}", configuration["HybridTodoApiUrl"] ?? throw new ArgumentNullException("HybridTodoApiUrl"), new ForwarderRequestConfig(), b =>
         {
             b.AddRequestTransform(async c =>
             {
