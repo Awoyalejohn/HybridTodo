@@ -3,6 +3,7 @@ using HybridTodo.Clients;
 using HybridTodo.Services;
 using HybridTodo.Shared.Abstractions.Clients;
 using HybridTodo.Shared.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -32,11 +33,14 @@ namespace HybridTodo
             builder.Services.AddAuthorizationCore();
             builder.Services.AddCascadingAuthenticationState();
 
+
             // Configure data protection, setup the application discriminator so that the data protection keys can be shared between the BFF and this API
             builder.Services.AddDataProtection(o => o.ApplicationDiscriminator = "HybridTodo");
 
             // Add device-specific services used by the HybridTodo.Shared project
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
+
+            builder.Services.AddScoped<IComponentStateManager, MauiComponentStateManager>();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration["HybridTodoApiUrl"] ?? throw new ArgumentNullException("HybridTodoApiUrl")) });
 

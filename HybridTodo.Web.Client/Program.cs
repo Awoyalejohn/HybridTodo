@@ -12,6 +12,8 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddAuthenticationStateDeserialization();
 
+builder.Services.AddScoped<IComponentStateManager, ComponentStateManager>();
+
 builder.Services.AddHttpClient<IAuthClient, AuthClient>(client =>
 {
     client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);

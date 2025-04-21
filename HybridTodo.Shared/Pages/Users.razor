@@ -1,8 +1,10 @@
 @page "/users"
 @using HybridTodo.Shared.Abstractions.Clients
+@using HybridTodo.Shared.Services
 
 @attribute [Authorize]
 @inject IUserClient UserClient
+@inject IComponentStateManager ComponentState
 
 <PageTitle>Users</PageTitle>
 
@@ -20,10 +22,24 @@ else
 
 @code {
     private string[] UserList = [];
+    private PersistingComponentStateSubscription _persistingSubscription;
 
     protected override async Task OnInitializedAsync()
     {
-        var users = await UserClient.TestAsync();
-        UserList = users;
+        if (ComponentState.TryTakeFromJson<string[]>(nameof(UserList), out var users))
+        {
+            UserList = users;
+        }
+        else
+        {
+            users = await UserClient.TestAsync();
+            UserList = users;
+        }
+
+        _persistingSubscription = ComponentState.RegisterOnPersisting(() =>
+        {
+            ComponentState.PersistAsJson(nameof(UserList), UserList);
+            return Task.CompletedTask;
+        });
     }
 }

@@ -2,11 +2,13 @@
 
 @using HybridTodo.Shared.Abstractions.Clients
 @using HybridTodo.Shared.Clients
+@using HybridTodo.Shared.Services
 @using Microsoft.AspNetCore.Authorization
 
 @attribute [Authorize]
 
 @inject ITodoClient TodoClient
+@inject IComponentStateManager ComponentState
 
 <PageTitle>Todo</PageTitle>
 
@@ -24,10 +26,24 @@ else
 
 @code {
     private string[] TodoItems = [];
+    private PersistingComponentStateSubscription _persistingSubscription;
 
     protected override async Task OnInitializedAsync()
     {
-        var todos = await TodoClient.TestAsync();
-        TodoItems = todos;
+        if (ComponentState.TryTakeFromJson<string[]>(nameof(TodoItems), out var todos))
+        {
+            TodoItems = todos;
+        }
+        else
+        {
+            todos = await TodoClient.TestAsync();
+            TodoItems = todos;
+        }
+
+        _persistingSubscription = ComponentState.RegisterOnPersisting(() =>
+        {
+            ComponentState.PersistAsJson(nameof(TodoItems), TodoItems);
+            return Task.CompletedTask;
+        });
     }
 }
