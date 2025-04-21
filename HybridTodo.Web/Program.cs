@@ -6,9 +6,12 @@ using HybridTodo.Web.Components;
 using HybridTodo.Web.Endpoints;
 using HybridTodo.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Hosting;
 using Microsoft.FluentUI.AspNetCore.Components;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -52,8 +55,8 @@ builder.Services.AddHttpClient<IUserClient, HybridTodo.Shared.Clients.UserClient
 .AddHttpMessageHandler<CookieAppendingHandler>();
 
 // Add the forwarder to make sending requests to the backend easier
-builder.Services.AddHttpForwarder();
-//builder.Services.AddHttpForwarderWithServiceDiscovery();
+//builder.Services.AddHttpForwarder();
+builder.Services.AddHttpForwarderWithServiceDiscovery();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -64,6 +67,8 @@ builder.Services
 builder.Services.AddFluentUIComponents();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

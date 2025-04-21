@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridTodo", "HybridTodo\Hy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridTodo.Api", "HybridTodo.Api\HybridTodo.Api.csproj", "{ECCF98C2-028A-E0ED-8022-54E6EDFF0307}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridTodo.AppHost.ServiceDefaults", "HybridTodo.AppHost.ServiceDefaults\HybridTodo.AppHost.ServiceDefaults.csproj", "{05E7C207-AF14-57C8-F3B9-9A25091D6D83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HybridTodo.AppHost", "HybridTodo.AppHost\HybridTodo.AppHost.csproj", "{4898F765-A969-45AB-D877-899CD4F7A3D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,8 +43,19 @@ Global
 		{ECCF98C2-028A-E0ED-8022-54E6EDFF0307}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECCF98C2-028A-E0ED-8022-54E6EDFF0307}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECCF98C2-028A-E0ED-8022-54E6EDFF0307}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05E7C207-AF14-57C8-F3B9-9A25091D6D83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05E7C207-AF14-57C8-F3B9-9A25091D6D83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05E7C207-AF14-57C8-F3B9-9A25091D6D83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05E7C207-AF14-57C8-F3B9-9A25091D6D83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4898F765-A969-45AB-D877-899CD4F7A3D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4898F765-A969-45AB-D877-899CD4F7A3D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4898F765-A969-45AB-D877-899CD4F7A3D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4898F765-A969-45AB-D877-899CD4F7A3D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DBEDCDF2-566C-4E2F-AC3F-037D7212B9F7}
 	EndGlobalSection
 EndGlobal

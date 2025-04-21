@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HybridTodo.AppHost.ServiceDefaults\HybridTodo.AppHost.ServiceDefaults.csproj" />
     <ProjectReference Include="..\HybridTodo.Shared\HybridTodo.Shared.csproj" />
   </ItemGroup>
 

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HybridTodo.AppHost.ServiceDefaults\HybridTodo.AppHost.ServiceDefaults.csproj" />
     <ProjectReference Include="..\HybridTodo.Web.Client\HybridTodo.Web.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.4" />
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="9.2.0" />
