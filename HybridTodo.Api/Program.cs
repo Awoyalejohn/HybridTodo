@@ -1,4 +1,5 @@
 using HybridTodo.Api;
+using HybridTodo.Api.Data;
 using HybridTodo.Api.Endpoints;
 using HybridTodo.Api.Extensions;
 using HybridTodo.Shared.Constants;
@@ -6,6 +7,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Scalar.AspNetCore;
 using System.Diagnostics;
@@ -51,6 +54,14 @@ builder.Services.AddProblemDetails(options =>
 });
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+var connectionString = builder.Configuration.GetConnectionString("HybridTodoConnection");
+ArgumentNullException.ThrowIfNull(connectionString);
+
+builder.Services.AddDbContext<HybridTodoContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
 
 var app = builder.Build();
 
