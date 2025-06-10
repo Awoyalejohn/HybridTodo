@@ -9,12 +9,12 @@
   <ItemGroup>
     <ProjectReference Include="..\HybridTodo.AppHost.ServiceDefaults\HybridTodo.AppHost.ServiceDefaults.csproj" />
     <ProjectReference Include="..\HybridTodo.Web.Client\HybridTodo.Web.Client.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.4" />
-    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="9.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="9.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.11.8" />
-    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.11.8" />
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.12.0" />
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.12.0" />
     <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
   </ItemGroup>
 

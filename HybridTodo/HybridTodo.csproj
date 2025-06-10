@@ -69,18 +69,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.4" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="9.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.4" />
-    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.8.0" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.60" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="9.0.60" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.6" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.12.0" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.70" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="9.0.70" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.11.8" />
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.12.0" />
     <ProjectReference Include="..\HybridTodo.Shared\HybridTodo.Shared.csproj" />
   </ItemGroup>
 
